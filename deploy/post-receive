@@ -2,8 +2,8 @@
 
 # WARING, this needs to be copied manually to server
 
-TARGET="/home/www/aMaze"
-GIT_DIR="/home/lukas/aMaze.git"
+TARGET="/home/www-files/aMaze"
+GIT_DIR="/home/lukas/aMaze"
 BRANCH="master"
 
 while read oldrev newrev ref
