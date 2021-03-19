@@ -1,3 +1,5 @@
+  GNU nano 3.2                                       hooks/post-receive                                                  
+
 #!/bin/bash
 
 # WARING, this needs to be copied manually to server
@@ -8,12 +10,16 @@ BRANCH="master"
 
 while read oldrev newrev ref
 do
-	# only checking out the master (or whatever branch you would like to deploy)
-	if [ "$ref" = "refs/heads/$BRANCH" ];
-	then
-		echo "Ref $ref received. Deploying ${BRANCH} branch to production..."
-		git --work-tree=$TARGET --git-dir=$GIT_DIR checkout -f $BRANCH
-	else
-		echo "Ref $ref received. Doing nothing: only the ${BRANCH} branch may be deployed on this server."
-	fi
+        # only checking out the master (or whatever branch you would like to deploy)
+        if [ "$ref" = "refs/heads/$BRANCH" ];
+        then
+                echo "Ref $ref received. Deploying ${BRANCH} branch to production..."
+                git --work-tree=$TARGET --git-dir=$GIT_DIR checkout -f $BRANCH
+                source $TARGET/venv/bin/activate
+                pip install -r $TARGET/requirements.txt
+                deactivate
+        else
+                echo "Ref $ref received. Doing nothing: only the ${BRANCH} branch may be deployed on this server."
+        fi
 done
+

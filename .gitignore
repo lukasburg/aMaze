@@ -1,0 +1,8 @@
+# Ignore venv, intellij
+venv/
+.idea
+
+# Ignore caches/db
+__pycache__
+db.sqlite3
+static
