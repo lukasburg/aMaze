@@ -124,6 +124,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = "/home/lukas/aMaze/static/"
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "/home/lukas/aMaze/media/"
+
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/profile/"
 

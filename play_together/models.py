@@ -11,7 +11,7 @@ from pprint import pprint
 
 class Console(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    icon = models.ImageField()
+    icon = models.ImageField(null=True, upload_to="console-icon/")
 
     def __str__(self):
         return self.name
