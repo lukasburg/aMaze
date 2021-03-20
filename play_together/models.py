@@ -11,6 +11,7 @@ from pprint import pprint
 
 class Console(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    icon = models.ImageField()
 
     def __str__(self):
         return self.name
@@ -31,11 +32,14 @@ class Game(models.Model):
     ]
     crossplay_support = models.CharField(max_length=4, choices=CROSSPLAY_CHOICES)
     comment = models.TextField(
-        max_length=2000, help_text="Specify crossplay conditions or any other info"
+        max_length=2000, help_text="Specify crossplay conditions or any other info", blank=True
     )
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('play_together:game-detail', kwargs={'pk': self.pk})
 
 
 class OwnedGames(models.Model):

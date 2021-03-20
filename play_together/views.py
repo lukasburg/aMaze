@@ -1,10 +1,26 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Player, PlayerGroup
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.detail import DetailView
+from .models import Game, Player, PlayerGroup
 
 
 def index(request):
     return redirect("play_together:profile")
+
+
+class GameDetail(DetailView):
+    model = Game
+
+
+class GameCreate(CreateView):
+    model = Game
+    fields = ['name', 'price', 'available_on', 'multiplayer_count', 'crossplay_support', 'comment']
+
+
+class GameUpdate(UpdateView):
+    model = Game
+    fields = ['name', 'price', 'available_on', 'multiplayer_count', 'crossplay_support', 'comment']
 
 
 # Create your views here.
@@ -20,8 +36,8 @@ def profile(request):
 
 
 @login_required
-def group_view(request, group_id):
-    group = get_object_or_404(PlayerGroup, id=group_id)
+def group_view(request, pk):
+    group = get_object_or_404(PlayerGroup, id=pk)
     if not request.user.player.is_part_of_group(group):
         return redirect(f"/login?next={request.path}")
 

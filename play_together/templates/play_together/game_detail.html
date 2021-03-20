@@ -1,0 +1,27 @@
+{% extends 'play_together/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Change games{% endblock %}
+{% block content %}
+  <div class="row">
+    <h2 class="col">Details for {{ game.name }}</h2>
+  </div>
+  <div class="row">
+    <div class="col-auto">Price:</div><div class="col-auto">{{ game.price }}€</div>
+  </div>
+  <div class="row">
+    <div class="col-auto">Available on:</div><div class="col-auto">
+    {% for console in game.available_on %}console.name{% endfor %}
+   </div>
+  </div>
+  <div class="row">
+    <div class="col-auto">Multiplayer Count:</div><div class="col-auto">{{ game.multiplayer_count }}</div>
+  </div>
+  <div class="row">
+    <div class="col-auto">Crossplay:</div><div class="col-auto">{{ game.crossplay_support }}</div>
+  </div>
+  <div class="row">
+    <div class="col-auto">Comment:</div><div class="col-auto">{{ game.comment }}</div>
+  </div>
+{% endblock %}

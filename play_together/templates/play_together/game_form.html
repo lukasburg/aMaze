@@ -1,0 +1,20 @@
+{% extends 'play_together/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Change games{% endblock %}
+{% block content %}
+  <div class="row">
+    <h2 class="col">Add a new game</h2>
+  </div>
+  <div class="row">
+    <div class="col">
+      <form method="post" action=".">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <p>*This value must be entered</p>
+        <input type="submit" value="Submit" class="btn btn-success">
+      </form>
+    </div>
+  </div>
+{% endblock %}

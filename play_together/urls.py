@@ -12,5 +12,8 @@ urlpatterns = [
         name="login",
     ),
     path("profile/", views.profile, name="profile"),
-    path("group/<int:group_id>", views.group_view, name="group_view"),
+    path("group/<int:pk>", views.group_view, name="group_view"),
+    path("game/<int:pk>/", views.GameDetail.as_view(), name="game-detail"),
+    path("game/create/", views.GameCreate.as_view(), name="game-add"),
+    path("game/<int:pk>/change/", views.GameUpdate.as_view(), name="game-change"),
 ]
