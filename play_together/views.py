@@ -26,7 +26,17 @@ def group_view(request, group_id):
         return redirect(f"/login?next={request.path}")
 
     players = group.players.all()
-    games = group.watched_games.all()
+    games = [
+        (
+            game,
+            [
+                [owned_game.console for owned_game in player.ownedgames_set.filter(game=game)]
+                for player in players
+            ]
+        )
+        for game in group.watched_games.all()
+    ]
+    print(games)
     context = {
         "group": group,
         "players": players,

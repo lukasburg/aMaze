@@ -3,12 +3,45 @@
 {% block title %}Profile Page{% endblock %}
 
 {% block content %}
-
-  <a href="{% url 'admin:play_together_player_change' user.id %}">Add a game to your watchlist</a>
-
-  <h2>Games list</h2>
-  {% for game in ordered_games %}
-    {{ game.name }}
-  {% endfor %}
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div class="col">
+          <h2>{{ group.name }}</h2>
+        </div>
+      </div>
+    <hr>
+{#    Align baseline#}
+      <div class="row">
+        <h4 class="col-auto">Games list</h4><a class="col-auto" href="{% url 'admin:play_together_playergroup_change' group.id %}">Add</a>
+      </div>
+      <div class="row">
+        <div class="col">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">Game</th>
+              <th scope="col">Price</th>
+              {% for player in players %}
+                <th scope="col">{{ player.user.username }}</th>
+              {% endfor %}
+              <th scope="col">Crossplay</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for game, player_owned_list in ordered_games %}
+              <td>{{ game.name }}</td>
+              <td>{{ game.price }}€</td>
+              {% for owned_list in player_owned_list %}
+                <td>{% for console in owned_list %} {{ console.name }} {% endfor %}</td>
+              {% endfor %}
+              <td><a href="{% url 'admin:play_together_game_change' game %}">{{ game.crossplay_support }}</a></td>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}

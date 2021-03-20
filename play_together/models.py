@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+from django.urls import reverse
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -48,12 +49,16 @@ class Player(models.Model):
     # https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     my_games = models.ManyToManyField(Game, through=OwnedGames)
+    my_consoles = models.ManyToManyField(Console, blank=True)
 
     def is_part_of_group(self, group):
         return self.playergroup_set.filter(id=group.id).exists()
 
     def __str__(self):
         return self.user.username
+
+    def get_absolute_url(self):
+        return reverse('play_together:profile')
 
 
 @receiver(post_save, sender=User)
@@ -70,3 +75,6 @@ class PlayerGroup(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('play_together:group_view', args=[self.id])
