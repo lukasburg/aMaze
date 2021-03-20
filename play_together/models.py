@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.urls import reverse
 
@@ -41,6 +42,11 @@ class OwnedGames(models.Model):
     player = models.ForeignKey("Player", on_delete=models.CASCADE)
     console = models.ForeignKey(Console, on_delete=models.PROTECT)
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
+
+    def clean(self):
+        pprint(self.game.available_on.all())
+        if not self.game.available_on.filter(id=self.console.id).exists():
+            raise ValidationError(f"{self.game} seems to not exist on {self.console}.")
 
 
 # Players

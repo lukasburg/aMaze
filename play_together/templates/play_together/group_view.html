@@ -12,9 +12,9 @@
       </div>
       <hr>
       {#    Align baseline#}
-      <div class="row">
-        <h4 class="col-auto">Games list</h4><a class="col-auto"
-                                               href="{% url 'admin:play_together_playergroup_change' group.id %}">Add</a>
+      <div class="row align-items-baseline">
+        <h4 class="col-auto">Games list</h4>
+        <a class="col-auto" href="{% url 'admin:play_together_playergroup_change' group.id %}">Add</a>
       </div>
       <div class="row">
         <div class="col">
@@ -46,5 +46,4 @@
       </div>
     </div>
   </div>
-
 {% endblock %}
