@@ -48,6 +48,10 @@ class OwnedGames(models.Model):
         if not self.game.available_on.filter(id=self.console.id).exists():
             raise ValidationError(f"{self.game} seems to not exist on {self.console}.")
 
+    class Meta:
+        verbose_name = 'Owned Game'
+        verbose_name_plural = 'Owned Games Plural'
+
 
 # Players
 class Player(models.Model):
@@ -84,3 +88,7 @@ class PlayerGroup(models.Model):
 
     def get_absolute_url(self):
         return reverse('play_together:group_view', args=[self.id])
+
+    class Meta:
+        verbose_name = 'Player Group'
+        verbose_name_plural = 'Player Groups'

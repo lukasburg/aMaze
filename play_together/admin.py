@@ -23,7 +23,7 @@ class GameAdmin(admin.ModelAdmin):
 
 
 class OwnedGames(admin.TabularInline):
-    extra = 3
+    extra = 1
     model = models.OwnedGames
     fields = ("console", "game")
 
