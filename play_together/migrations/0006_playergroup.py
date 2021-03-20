@@ -6,16 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('play_together', '0005_auto_20210319_1957'),
+        ("play_together", "0005_auto_20210319_1957"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PlayerGroup',
+            name="PlayerGroup",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('players', models.ManyToManyField(to='play_together.Player')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                ("players", models.ManyToManyField(to="play_together.Player")),
             ],
         ),
     ]

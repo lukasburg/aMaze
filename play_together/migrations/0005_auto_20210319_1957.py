@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('play_together', '0004_auto_20210319_1954'),
+        ("play_together", "0004_auto_20210319_1954"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='PlayerGameConsoleRelation',
-            new_name='OwnedGames',
+            old_name="PlayerGameConsoleRelation",
+            new_name="OwnedGames",
         ),
     ]

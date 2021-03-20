@@ -16,30 +16,86 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Console',
+            name="Console",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='Player',
+            name="Player",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('backend_user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                (
+                    "backend_user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Game',
+            name="Game",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('price', models.PositiveIntegerField(help_text='Approximate Price on any Source')),
-                ('multiplayer_count', models.PositiveIntegerField(validators=[django.core.validators.MinValueValidator(1)])),
-                ('crossplay_support', models.CharField(choices=[('full', 'Full Support'), ('part', 'Partial Support (See below)'), ('none', 'No Support')], max_length=4)),
-                ('comment', models.TextField(help_text='Specify crossplay conditions or any other info', max_length=2000)),
-                ('available_on', models.ManyToManyField(to='play_together.Console')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                (
+                    "price",
+                    models.PositiveIntegerField(
+                        help_text="Approximate Price on any Source"
+                    ),
+                ),
+                (
+                    "multiplayer_count",
+                    models.PositiveIntegerField(
+                        validators=[django.core.validators.MinValueValidator(1)]
+                    ),
+                ),
+                (
+                    "crossplay_support",
+                    models.CharField(
+                        choices=[
+                            ("full", "Full Support"),
+                            ("part", "Partial Support (See below)"),
+                            ("none", "No Support"),
+                        ],
+                        max_length=4,
+                    ),
+                ),
+                (
+                    "comment",
+                    models.TextField(
+                        help_text="Specify crossplay conditions or any other info",
+                        max_length=2000,
+                    ),
+                ),
+                ("available_on", models.ManyToManyField(to="play_together.Console")),
             ],
         ),
     ]

@@ -1,0 +1,14 @@
+{% extends "play_together/base.html" %}
+
+{% block title %}Profile Page{% endblock %}
+
+{% block content %}
+
+  <a href="{% url 'admin:play_together_player_change' user.id %}">Add a game to your watchlist</a>
+
+  <h2>Games list</h2>
+  {% for game in ordered_games %}
+    {{ game.name }}
+  {% endfor %}
+
+{% endblock %}

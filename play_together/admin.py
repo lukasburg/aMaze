@@ -7,22 +7,30 @@ from play_together import models
 class GameAdmin(admin.ModelAdmin):
     model = models.Game
     fieldsets = [
-        ('General', {'fields': ('name', 'price')}),
-        ('Multiplayer', {'fields': (
-            'available_on', 'multiplayer_count', 'crossplay_support', 'comment'
-        )})
+        ("General", {"fields": ("name", "price")}),
+        (
+            "Multiplayer",
+            {
+                "fields": (
+                    "available_on",
+                    "multiplayer_count",
+                    "crossplay_support",
+                    "comment",
+                )
+            },
+        ),
     ]
 
 
 class OwnedGames(admin.TabularInline):
     extra = 3
     model = models.OwnedGames
-    fields = ('console', 'game')
+    fields = ("console", "game")
 
 
 class PlayerAdmin(admin.ModelAdmin):
-    exclude = ['user']
-    inlines = (OwnedGames, )
+    exclude = ["user"]
+    inlines = (OwnedGames,)
 
     def has_view_permission(self, request, obj=None):
         if obj is None:

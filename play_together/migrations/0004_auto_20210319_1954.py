@@ -7,22 +7,51 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('play_together', '0003_auto_20210319_1949'),
+        ("play_together", "0003_auto_20210319_1949"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PlayerGameConsoleRelation',
+            name="PlayerGameConsoleRelation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('console', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='play_together.console')),
-                ('game', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='play_together.game')),
-                ('player', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='play_together.player')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "console",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="play_together.console",
+                    ),
+                ),
+                (
+                    "game",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="play_together.game",
+                    ),
+                ),
+                (
+                    "player",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="play_together.player",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='player',
-            name='my_games',
-            field=models.ManyToManyField(through='play_together.PlayerGameConsoleRelation', to='play_together.Game'),
+            model_name="player",
+            name="my_games",
+            field=models.ManyToManyField(
+                through="play_together.PlayerGameConsoleRelation",
+                to="play_together.Game",
+            ),
         ),
     ]

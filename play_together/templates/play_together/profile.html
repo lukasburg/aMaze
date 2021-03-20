@@ -1,0 +1,14 @@
+{% extends "play_together/base.html" %}
+
+{% block title %}Profile Page{% endblock %}
+
+{% block content %}
+
+  <a href="{% url 'admin:play_together_player_change' user.id %}">Add games you own</a>
+
+  <h2>Your Groups</h2>
+  {% for group in groups %}
+    <a href="{% url 'play_together:group_view' group.id %}">{{ group.name }}</a>
+  {% endfor %}
+
+{% endblock %}
