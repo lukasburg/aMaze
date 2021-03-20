@@ -10,10 +10,11 @@
           <h2>{{ group.name }}</h2>
         </div>
       </div>
-    <hr>
-{#    Align baseline#}
+      <hr>
+      {#    Align baseline#}
       <div class="row">
-        <h4 class="col-auto">Games list</h4><a class="col-auto" href="{% url 'admin:play_together_playergroup_change' group.id %}">Add</a>
+        <h4 class="col-auto">Games list</h4><a class="col-auto"
+                                               href="{% url 'admin:play_together_playergroup_change' group.id %}">Add</a>
       </div>
       <div class="row">
         <div class="col">
@@ -30,12 +31,14 @@
             </thead>
             <tbody>
             {% for game, player_owned_list in ordered_games %}
-              <td>{{ game.name }}</td>
-              <td>{{ game.price }}€</td>
-              {% for owned_list in player_owned_list %}
-                <td>{% for console in owned_list %} {{ console.name }} {% endfor %}</td>
-              {% endfor %}
-              <td><a href="{% url 'admin:play_together_game_change' game %}">{{ game.crossplay_support }}</a></td>
+              <tr>
+                <td>{{ game.name }}</td>
+                <td>{{ game.price }}€</td>
+                {% for owned_list in player_owned_list %}
+                  <td>{% for console in owned_list %} {{ console.name }} {% endfor %}</td>
+                {% endfor %}
+                <td><a href="{% url 'admin:play_together_game_change' game %}">{{ game.crossplay_support }}</a></td>
+              </tr>
             {% endfor %}
             </tbody>
           </table>
