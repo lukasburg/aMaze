@@ -18,7 +18,7 @@ do
                 $TARGET/venv/bin/pip install -r $TARGET/requirements.txt
                 # Migrate and collect static files
                 $TARGET/venv/bin/python $TARGET/manage.py migrate
-                $TARGET/venv/bin/python $TARGET/manage.py collectstatic
+                $TARGET/venv/bin/python $TARGET/manage.py collectstatic --no-input
                 # Reload apache
                 sudo /usr/bin/systemctl reload apache2.service
         else
