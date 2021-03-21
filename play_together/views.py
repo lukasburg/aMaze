@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 
 from django.views.generic.edit import CreateView, UpdateView
@@ -41,11 +42,27 @@ class PlayerDetail(DetailView):
         context['addable_games'] = Game.objects.exclude(
             id__in=player.games.values_list('id')
         )
-        context['addable_consoles'] = Console.objects.exclude(
-            id__in=player.consoles.values_list('id')
-        ).all()
-        print(context)
+        context['consoles'] = Console.objects.all()
         return context
+
+
+@login_required
+def toggle_owned_console(request, pk):
+    if request.method == "GET":
+        return HttpResponseNotAllowed(permitted_methods='POST')
+    console = get_object_or_404(Console, pk=pk)
+    player = request.user.player
+    set_state = request.POST['set_state']
+    current_state = player.consoles.filter(id=console.id).exists()
+    # TODO send error, if both states the same, should not happen
+    if set_state == current_state:
+        pass
+    if set_state == 'true':
+        player.consoles.add(console)
+    else:
+        player.consoles.remove(console)
+    print(f"console: {console}, current_state: {current_state}, set_state: {set_state}, player: {player}")
+    return HttpResponse(status=200)
 
 
 @login_required
@@ -65,7 +82,6 @@ def group_view(request, pk):
         )
         for game in group.watched_games.all()
     ]
-    print(games)
     context = {
         "group": group,
         "players": players,

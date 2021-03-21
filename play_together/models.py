@@ -50,7 +50,7 @@ class OwnedGames(models.Model):
     def clean(self):
         if not self.game.available_on.filter(id=self.console.id).exists():
             raise ValidationError(f"{self.game} seems to not exist on {self.console}.")
-        if not self.player.my_consoles.filter(id=self.console.id).exists():
+        if not self.player.consoles.filter(id=self.console.id).exists():
             raise ValidationError(f"You don't seem to own {self.console}.")
 
     class Meta:

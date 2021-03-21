@@ -26,3 +26,7 @@ body {
 .card-link:hover .card {
     background-color: #f8f9fa;
 }
+
+.btn-toggle.btn-outline-secondary:hover {
+    background-color: initial;
+}

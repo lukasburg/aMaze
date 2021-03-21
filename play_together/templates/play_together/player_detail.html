@@ -1,8 +1,11 @@
 {% extends "play_together/base.html" %}
 
+{% load static %}
+
 {% block title %}Profile Page{% endblock %}
 
 {% block content %}
+  {% csrf_token %}
 
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     Hello there, <strong>{{ player.user.username }}</strong> :)
@@ -15,29 +18,52 @@
     <h2 class="col">Your Groups</h2>
   </div>
   <div class="card-deck">
-  {% for group in player.playergroup_set.all %}
-    <a href="{% url 'play_together:group_view' group.id %}" class="card-link">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{ group.name }}</h5>
-          <p>{% for player in group.players.all %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-            </svg>
+    {% for group in player.playergroup_set.all %}
+      <a href="{% url 'play_together:group_view' group.id %}" class="card-link">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ group.name }}</h5>
+            <p>{% for player in group.players.all %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                   class="bi bi-person-fill" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+              </svg>
             {% endfor %}
-          </p>
-          <p class="card-text"><small class="text-muted">Last updated -1 sec ago</small></p>
+            </p>
+            <p class="card-text"><small class="text-muted">Last updated -1 sec ago</small></p>
+          </div>
         </div>
+      </a>
+    {% endfor %}
+  </div>
+  <hr>
+
+  <div class="row mt-3 align-items-baseline">
+    <h2 class="col-auto">Your Consoles</h2>
+  </div>
+  <div class="row mt-1">
+    {% for console in consoles %}
+      <div class="col-auto">
+        <button data-class-true="btn-success" data-class-false="btn-outline-secondary"
+                data-server-url="{% url 'play_together:player-toggle-console' console.id %}"
+          {% if console in player.consoles.all %} data-current-state="true" class="btn btn-success btn-toggle"
+          {% else %} data-current-state="False" class="btn btn-outline-secondary btn-toggle"
+          {% endif %} onclick="pressToggleButton(this)">
+          <img src="{{ console.icon.url }}" alt="{{ console.name }}">
+        </button>
       </div>
-    </a>
-  {% endfor %}
+    {% endfor %}
+  </div>
+  <div class="row mt-2">
+    <small class="col-auto">(Click to add)</small>
   </div>
 
   {% for game in addable_games %}
     <p>{{ game.name }}</p>
   {% endfor %}
   <a href="{% url 'admin:play_together_player_change' player.id %}">Add games you own</a>
-  {% for console in addable_consoles %}
-    <p>{{ console.name }}</p>
-  {% endfor %}
+
+  {% block script %}
+    <script src="{% static 'play_together/toggle-button.js' %}"></script>
+  {% endblock %}
 {% endblock %}
