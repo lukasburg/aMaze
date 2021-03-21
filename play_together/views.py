@@ -6,7 +6,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 
-from .models import Game, Player, PlayerGroup
+from .models import Game, Console, Player, PlayerGroup
+# from .forms import PlayerInlinesForm
 
 
 def index(request):
@@ -34,17 +35,17 @@ class PlayerDetail(DetailView):
     def get_object(self, queryset=None):
         return self.request.user.player
 
-
-# # Create your views here.
-# @login_required
-# def profile(request):
-#     logged_in = Player.objects.get(user=request.user)
-#     users_groups = logged_in.playergroup_set.all()
-#     context = {
-#         "user": logged_in,
-#         "groups": users_groups,
-#     }
-#     return render(request, "play_together/profile.html", context)
+    def get_context_data(self, **kwargs):
+        player = self.get_object()
+        context = super().get_context_data(**kwargs)
+        context['addable_games'] = Game.objects.exclude(
+            id__in=player.games.values_list('id')
+        )
+        context['addable_consoles'] = Console.objects.exclude(
+            id__in=player.consoles.values_list('id')
+        ).all()
+        print(context)
+        return context
 
 
 @login_required
