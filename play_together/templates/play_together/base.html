@@ -16,7 +16,27 @@
   <link rel="stylesheet" href="{% static 'play_together/style.css' %}">
 </head>
 <body class="d-flex flex-column h-100">
-<div class="container mt-5">
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+    <img src="{% static 'favicon.svg' %}" alt="aMaze Icon">
+    aMaze
+  </a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item {% if request.path == "/player/" %}active{% endif %}">
+        <a class="nav-link" href="{% url 'play_together:player-detail' %}">Profile
+           {% if request.path == "/player/" %}<span class="sr-only">(current)</span>{% endif %}
+        </a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<div class="container mt-3">
   {% block content %}
   {% endblock %}
 </div>
