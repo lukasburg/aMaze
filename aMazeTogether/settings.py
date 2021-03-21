@@ -128,7 +128,8 @@ if DEBUG:
     STATIC_ROOT = "static/"
     MEDIA_ROOT = "media/"
 
-LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/player/"
+LOGIN_URL = "play_together:login"
+LOGIN_REDIRECT_URL = "play_together:player-detail"
+LOGOUT_REDIRECT_URL = "play_together:login"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

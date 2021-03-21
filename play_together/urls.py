@@ -11,6 +11,11 @@ urlpatterns = [
         auth_views.LoginView.as_view(template_name="play_together/login.html"),
         name="login",
     ),
+    path(
+        "logout/",
+        auth_views.LogoutView.as_view(),
+        name="logout"
+    ),
     path("player/", views.PlayerDetail.as_view(), name="player-detail"),
     path("group/<int:pk>", views.group_view, name="group_view"),
     path("game/<int:pk>/", views.GameDetail.as_view(), name="game-detail"),
