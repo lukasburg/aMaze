@@ -48,9 +48,10 @@ class OwnedGames(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
 
     def clean(self):
-        pprint(self.game.available_on.all())
         if not self.game.available_on.filter(id=self.console.id).exists():
             raise ValidationError(f"{self.game} seems to not exist on {self.console}.")
+        if not self.player.my_consoles.filter(id=self.console.id).exists():
+            raise ValidationError(f"You don't seem to own {self.console}.")
 
     class Meta:
         verbose_name = 'Owned Game'
@@ -62,8 +63,8 @@ class Player(models.Model):
     # Reference backend user:
     # https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    my_games = models.ManyToManyField(Game, through=OwnedGames)
-    my_consoles = models.ManyToManyField(Console, blank=True)
+    games = models.ManyToManyField(Game, name="Your Games", through=OwnedGames)
+    consoles = models.ManyToManyField(Console, name="Your Consoles", blank=True)
 
     def is_part_of_group(self, group):
         return self.playergroup_set.filter(id=group.id).exists()
