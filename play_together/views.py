@@ -1,12 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
+
 from .models import Game, Player, PlayerGroup
 
 
 def index(request):
-    return redirect("play_together:profile")
+    return redirect("play_together:player-detail")
 
 
 class GameDetail(DetailView):
@@ -23,16 +27,24 @@ class GameUpdate(UpdateView):
     fields = ['name', 'price', 'available_on', 'multiplayer_count', 'crossplay_support', 'comment']
 
 
-# Create your views here.
-@login_required
-def profile(request):
-    logged_in = Player.objects.get(user=request.user)
-    users_groups = logged_in.playergroup_set.all()
-    context = {
-        "user": logged_in,
-        "groups": users_groups,
-    }
-    return render(request, "play_together/profile.html", context)
+@method_decorator(login_required, name='dispatch')
+class PlayerDetail(DetailView):
+    model = Player
+
+    def get_object(self, queryset=None):
+        return self.request.user.player
+
+
+# # Create your views here.
+# @login_required
+# def profile(request):
+#     logged_in = Player.objects.get(user=request.user)
+#     users_groups = logged_in.playergroup_set.all()
+#     context = {
+#         "user": logged_in,
+#         "groups": users_groups,
+#     }
+#     return render(request, "play_together/profile.html", context)
 
 
 @login_required

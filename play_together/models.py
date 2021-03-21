@@ -72,7 +72,7 @@ class Player(models.Model):
         return self.user.username
 
     def get_absolute_url(self):
-        return reverse('play_together:profile')
+        return reverse('play_together:player-detail')
 
 
 @receiver(post_save, sender=User)

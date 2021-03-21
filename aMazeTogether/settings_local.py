@@ -126,6 +126,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = "media/"
 
 LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/profile/"
+LOGIN_REDIRECT_URL = "play_together:player-detail"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

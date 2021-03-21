@@ -128,6 +128,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = "/home/lukas/aMaze/media/"
 
 LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/profile/"
+LOGIN_REDIRECT_URL = "/player/"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
