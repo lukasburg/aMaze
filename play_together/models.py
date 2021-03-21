@@ -63,8 +63,8 @@ class Player(models.Model):
     # Reference backend user:
     # https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    games = models.ManyToManyField(Game, name="Your Games", through=OwnedGames)
-    consoles = models.ManyToManyField(Console, name="Your Consoles", blank=True)
+    games = models.ManyToManyField(Game, verbose_name="Your Games", through=OwnedGames, blank=True)
+    consoles = models.ManyToManyField(Console, verbose_name="Your Consoles", blank=True)
 
     def is_part_of_group(self, group):
         return self.playergroup_set.filter(id=group.id).exists()
