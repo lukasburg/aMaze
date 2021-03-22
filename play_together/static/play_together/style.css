@@ -39,3 +39,7 @@ body {
 .btn-delete.btn-small {
     padding: 0 0 !important;
 }
+
+.table tr td {
+    vertical-align: middle;
+}
