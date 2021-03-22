@@ -1,0 +1,17 @@
+{% extends "play_together/base.html" %}
+
+{% block title %}Profile Page{% endblock %}
+
+{% block content %}
+  <div class="alert alert-danger" role="alert">
+    <strong>OOPS!</strong> Something went wrong while editing information. Your latest edits might have failed.
+  </div>
+  <div class="row">
+  <div class="col">
+    <p>You probably edited information in two different tabs. Please only toggle buttons in one tab.</p>
+    <p>Else information on your page will be outdated and a refresh must be forced like this.</p>
+    <p>Return to the page you just edited here, after refreshing all other tabs.</p>
+    <a href="{{ next }}">{{ next }}</a>
+  </div>
+  </div>
+{% endblock %}

@@ -22,15 +22,15 @@ class GameAdmin(admin.ModelAdmin):
     ]
 
 
-class OwnedGames(admin.TabularInline):
+class OwnedGame(admin.TabularInline):
     extra = 1
-    model = models.OwnedGames
-    fields = ("console", "game")
+    model = models.OwnedGame
+    fields = ("consoles", "game")
 
 
 class PlayerAdmin(admin.ModelAdmin):
     exclude = ["user"]
-    inlines = (OwnedGames,)
+    inlines = (OwnedGame,)
 
     def has_view_permission(self, request, obj=None):
         if obj is None:

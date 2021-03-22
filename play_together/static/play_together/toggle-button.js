@@ -30,14 +30,35 @@ function toggleClass(button, state) {
     }
 }
 
+function forceRefresh(url) {
+    window.location.href = url
+}
+
+function forceLogin(url) {
+
+}
+
 function setOnServer(button, url, setState) {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url, true)
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
     xhr.setRequestHeader("X-CSRFToken", document.querySelector('[name=csrfmiddlewaretoken]').value)
     xhr.onreadystatechange = function() {
-        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        if (this.status === 403) {
+            // Client logged out
+            forceLogin(button.dataset.loginUrl)
+        }
+        else if (this.status === 409) {
+            // Conflict between client and server information
+            forceRefresh(button.dataset.errorUrl)
+        }
+        else if (this.status === 200 && this.readyState !== XMLHttpRequest.DONE) {}
+        else if (this.status === 200 && this.readyState === XMLHttpRequest.DONE) {
             enableButton(button)
+        }
+        else {
+            console.log("Unexpected response:")
+            console.log(this)
         }
     }
     xhr.send(`set_state=${setState}`)

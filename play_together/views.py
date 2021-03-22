@@ -1,18 +1,26 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
-
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.decorators.http import require_http_methods
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView
+from django_http_exceptions import HTTPExceptions
 
+from .decorators import login_required_return_denied
 from .models import Game, Console, Player, PlayerGroup
-# from .forms import PlayerInlinesForm
 
 
 def index(request):
     return redirect("play_together:player-detail")
+
+
+def toggle_error(request):
+    context = {
+        'next': request.GET.get('next', reverse('play_together:player-detail', ))
+    }
+    return render(request, "play_together/toggle-error.html", context)
 
 
 class GameDetail(DetailView):
@@ -37,10 +45,10 @@ class PlayerDetail(DetailView):
         return self.request.user.player
 
     def get_context_data(self, **kwargs):
-        player = self.get_object()
-        greet = self.request.GET.get('greet', False) == "True"
+        player = self.object
         context = super().get_context_data(**kwargs)
-        context['greet'] = greet
+        context['greet'] = self.request.GET.get('greet', False) == "True"
+        context['error_reload'] = self.request.POST.get('error-reload', False) == "True"
         context['addable_games'] = Game.objects.exclude(
             id__in=player.games.values_list('id')
         )
@@ -48,22 +56,41 @@ class PlayerDetail(DetailView):
         return context
 
 
-@login_required
+def toggle_many_to_many(instance_one_class_two_set, instance_two, expected_set_state):
+    current_state = instance_one_class_two_set.filter(id=instance_two.id).exists()
+    if expected_set_state == current_state:
+        raise HTTPExceptions.CONFLICT.with_content(
+            f"Conflicting states. Client tried to set status {instance_two} to {expected_set_state}, "
+            "which was already set on server. Refresh site!")
+    if expected_set_state is True:
+        instance_one_class_two_set.add(instance_two)
+    else:
+        instance_one_class_two_set.remove(instance_two)
+
+
+@require_http_methods(['POST'])
+@login_required_return_denied
 def toggle_owned_console(request, pk):
-    if request.method == "GET":
-        return HttpResponseNotAllowed(permitted_methods='POST')
     console = get_object_or_404(Console, pk=pk)
     player = request.user.player
-    set_state = request.POST['set_state']
-    current_state = player.consoles.filter(id=console.id).exists()
-    # TODO send error, if both states the same, should not happen
-    if set_state == current_state:
-        pass
-    if set_state == 'true':
-        player.consoles.add(console)
-    else:
-        player.consoles.remove(console)
-    print(f"console: {console}, current_state: {current_state}, set_state: {set_state}, player: {player}")
+    set_state = request.POST['set_state'] == 'true'
+    toggle_many_to_many(player.consoles, console, set_state)
+    return HttpResponse(status=200)
+
+
+@require_http_methods(['POST'])
+@login_required_return_denied
+def toggle_game_for_console(request, game_pk, console_pk):
+    game = get_object_or_404(Game, pk=game_pk)
+    console = get_object_or_404(Console, pk=console_pk)
+    player = request.user.player
+    set_state = request.POST['set_state'] == 'true'
+    if not player.ownedgame_set.filter(game_id=game).exists():
+        raise HTTPExceptions.CONFLICT.with_content(
+            "Conflicting states. "
+            f"Client tried to toggle for game he does not have set to owned {game} ({player.ownedgame_set.all()})"
+            "which was already set on server. Refresh site!")
+    toggle_many_to_many(player.ownedgame_set.filter(game_id=game).first().consoles, console, set_state)
     return HttpResponse(status=200)
 
 

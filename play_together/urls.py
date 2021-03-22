@@ -1,5 +1,4 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
 from . import views
 
@@ -7,9 +6,13 @@ app_name = "play_together"
 urlpatterns = [
     # Redirect to login
     path("", views.index, name="index"),
+    # Toggling error
+    path("toggle/error/", views.toggle_error, name="toggle-error"),
     # Player site views/endpoints
     path("player/", views.PlayerDetail.as_view(), name="player-detail"),
     path("player/console/<int:pk>/toggle", views.toggle_owned_console, name="player-toggle-console"),
+    path("player/game/<int:game_pk>/console/<int:console_pk>/toggle", views.toggle_game_for_console,
+         name="player-game-toggle-console"),
     # Game views
     path("game/<int:pk>/", views.GameDetail.as_view(), name="game-detail"),
     path("game/create/", views.GameCreate.as_view(), name="game-add"),

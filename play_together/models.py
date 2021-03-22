@@ -6,7 +6,6 @@ from django.urls import reverse
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from pprint import pprint
 
 
 class Console(models.Model):
@@ -42,16 +41,17 @@ class Game(models.Model):
         return reverse('play_together:game-detail', kwargs={'pk': self.pk})
 
 
-class OwnedGames(models.Model):
+class OwnedGame(models.Model):
     player = models.ForeignKey("Player", on_delete=models.CASCADE)
-    console = models.ForeignKey(Console, on_delete=models.PROTECT)
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    consoles = models.ManyToManyField(Console, blank=True)
 
     def clean(self):
-        if not self.game.available_on.filter(id=self.console.id).exists():
-            raise ValidationError(f"{self.game} seems to not exist on {self.console}.")
-        if not self.player.consoles.filter(id=self.console.id).exists():
-            raise ValidationError(f"You don't seem to own {self.console}.")
+        for console in self.consoles.all():
+            if not self.game.available_on.filter(id=console).exists():
+                raise ValidationError(f"{self.game} seems to not exist on {self.console}.")
+            if not self.player.consoles.filter(id=console).exists():
+                raise ValidationError(f"You don't seem to own {self.console}.")
 
     class Meta:
         verbose_name = 'Owned Game'
@@ -63,7 +63,7 @@ class Player(models.Model):
     # Reference backend user:
     # https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    games = models.ManyToManyField(Game, verbose_name="Your Games", through=OwnedGames, blank=True)
+    games = models.ManyToManyField(Game, verbose_name="Your Games", through=OwnedGame, blank=True)
     consoles = models.ManyToManyField(Console, verbose_name="Your Consoles", blank=True)
 
     def is_part_of_group(self, group):
