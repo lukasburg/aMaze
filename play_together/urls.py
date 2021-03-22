@@ -9,10 +9,12 @@ urlpatterns = [
     # Toggling error
     path("toggle/error/", views.toggle_error, name="toggle-error"),
     # Player site views/endpoints
-    path("player/", views.PlayerDetail.as_view(), name="player-detail"),
+    path("player/", views.player_detail, name="player-detail"),
     path("player/console/<int:pk>/toggle", views.toggle_owned_console, name="player-toggle-console"),
     path("player/game/<int:game_pk>/console/<int:console_pk>/toggle", views.toggle_game_for_console,
          name="player-game-toggle-console"),
+    path("player/game/add", views.player_add_game, name="player-game-add"),
+    path("player/game/remove", views.player_remove_game, name="player-game-remove"),
     # Game views
     path("game/<int:pk>/", views.GameDetail.as_view(), name="game-detail"),
     path("game/create/", views.GameCreate.as_view(), name="game-add"),

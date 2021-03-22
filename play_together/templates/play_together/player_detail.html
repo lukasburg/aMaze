@@ -1,6 +1,7 @@
 {% extends "play_together/base.html" %}
 
 {% load static %}
+{% load crispy_forms_filters %}
 
 {% block title %}Profile Page{% endblock %}
 
@@ -88,6 +89,13 @@
         <div class="card">
           <div class="card-body">
             <div class="row align-items-center">
+              <form action="{% url 'play_together:player-game-remove' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="toggle_game" value="{{ owned_game.game.id }}">
+                <button type="submit" class="close btn-delete" aria-label="Remove">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </form>
               <strong class="col">{{ owned_game.game.name }}</strong>
               {% for console in owned_game.game.available_on.all %}
                 <div class="col-auto align-self-end">
@@ -109,11 +117,15 @@
       </div>
     {% endfor %}
   </div>
-  <hr/>
-  {% for game in addable_games %}
-    <p>{{ game.name }}</p>
-  {% endfor %}
-  <a href="{% url 'admin:play_together_player_change' player.id %}">Add games you own</a>
+  <div class="row mt-1">
+    <div class="col">
+      <form method="POST" action="{% url 'play_together:player-game-add' %}">
+        {% csrf_token %}
+        {{ add_game_form|crispy }}
+        <input type="submit" value="Add" class="btn btn-success">
+      </form>
+    </div>
+  </div>
 
   {% block script %}
     <script src="{% static 'play_together/toggle-button.js' %}"></script>

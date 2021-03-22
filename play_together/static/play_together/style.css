@@ -30,3 +30,8 @@ body {
 .btn-toggle.btn-outline-secondary:hover {
     background-color: initial;
 }
+
+.btn-delete {
+    padding: .75rem 1.25rem !important;
+    color: #721c24;
+}
