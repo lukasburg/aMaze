@@ -20,5 +20,7 @@ urlpatterns = [
     path("game/create/", views.GameCreate.as_view(), name="game-add"),
     path("game/<int:pk>/change/", views.GameUpdate.as_view(), name="game-change"),
     # Group views
-    path("group/<int:pk>", views.group_view, name="group_view"),
+    path("group/<int:pk>", views.group_detail, name="group-detail"),
+    path("group/<int:pk>/game/add", views.group_add_game, name="group-game-add"),
+    path("group/<int:pk>/game/remove", views.group_remove_game, name="group-game-remove"),
 ]

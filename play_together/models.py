@@ -92,7 +92,7 @@ class PlayerGroup(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('play_together:group_view', args=[self.id])
+        return reverse('group-detail', args=[self.id])
 
     class Meta:
         verbose_name = 'Player Group'
