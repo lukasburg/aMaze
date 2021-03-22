@@ -22,7 +22,7 @@
   </div>
   <div class="card-deck">
     {% for group in player.playergroup_set.all %}
-      <a href="{% url 'play_together:group_view' group.id %}" class="card-link">
+      <a href="{% url 'play_together:group-detail' group.id %}" class="card-link">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{ group.name }}</h5>
@@ -56,12 +56,13 @@
     {% for console in consoles %}
       <div class="col-auto">
         <button data-class-true="btn-success" data-class-false="btn-outline-secondary"
+                data-name="{{ console.name }}"
                 data-server-url="{% url 'play_together:player-toggle-console' console.id %}"
                 data-error-url="{% url 'play_together:toggle-error' %}?next={{ request.path }}"
                 data-login-url="{% url 'login' %}?next={{ request.path }}"
            {% if console in player.consoles.all %} data-current-state="true" class="btn btn-success btn-toggle"
            {% else %} data-current-state="false" class="btn btn-outline-secondary btn-toggle"
-           {% endif %} onclick="pressToggleButton(this)">
+           {% endif %} onclick="pressToggleButton(this); updateGameDisabledList(this)">
           <img src="{{ console.icon.url }}" alt="{{ console.name }}">
         </button>
       </div>
@@ -100,13 +101,17 @@
               {% for console in owned_game.game.available_on.all %}
                 <div class="col-auto align-self-end">
                   <button data-class-true="btn-success" data-class-false="btn-outline-secondary"
+                          data-console-name="{{ console.name }}"
                           data-server-url="{% url 'play_together:player-game-toggle-console' owned_game.game.id console.id %}"
                           data-error-url="{% url 'play_together:toggle-error' %}?next={{ request.path }}"
                           data-login-url="{% url 'login' %}?next={{ request.path }}"
                      {% if console in owned_game.consoles.all %} data-current-state="true"
                           class="btn btn-success btn-toggle"
                      {% else %} data-current-state="false" class="btn btn-outline-secondary btn-toggle"
-                     {% endif %} onclick="pressToggleButton(this)">
+                     {% endif %}
+                          onclick="pressToggleButton(this)"
+                     {% if not console in player.consoles.all %} disabled=""
+                     {% endif %}>
                     <img src="{{ console.icon.url }}" alt="{{ console.name }}">
                   </button>
                 </div>

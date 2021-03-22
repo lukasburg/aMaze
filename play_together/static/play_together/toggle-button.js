@@ -43,23 +43,30 @@ function setOnServer(button, url, setState) {
     xhr.open("POST", url, true)
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
     xhr.setRequestHeader("X-CSRFToken", document.querySelector('[name=csrfmiddlewaretoken]').value)
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (this.status === 403) {
             // Client logged out
             forceLogin(button.dataset.loginUrl)
-        }
-        else if (this.status === 409) {
+        } else if (this.status === 409) {
             // Conflict between client and server information
             forceRefresh(button.dataset.errorUrl)
-        }
-        else if (this.status === 200 && this.readyState !== XMLHttpRequest.DONE) {}
-        else if (this.status === 200 && this.readyState === XMLHttpRequest.DONE) {
+        } else if (this.status === 200 && this.readyState !== XMLHttpRequest.DONE) {
+        } else if (this.status === 200 && this.readyState === XMLHttpRequest.DONE) {
             enableButton(button)
-        }
-        else {
+        } else {
             console.log("Unexpected response:")
             console.log(this)
         }
     }
     xhr.send(`set_state=${setState}`)
+}
+
+function updateGameDisabledList(button) {
+    let consoleName = button.dataset.name
+    let newState = button.dataset.currentState === 'true'
+    document.querySelectorAll(`[data-console-name="${consoleName}"]`).forEach(
+        function (item) {
+            item.disabled = !newState
+        }
+    )
 }
