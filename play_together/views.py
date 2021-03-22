@@ -38,7 +38,9 @@ class PlayerDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         player = self.get_object()
+        greet = self.request.GET.get('greet', False) == "True"
         context = super().get_context_data(**kwargs)
+        context['greet'] = greet
         context['addable_games'] = Game.objects.exclude(
             id__in=player.games.values_list('id')
         )
