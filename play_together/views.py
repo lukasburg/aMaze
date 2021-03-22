@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
@@ -30,6 +30,7 @@ class GameDetail(DetailView):
 class GameCreate(CreateView):
     model = Game
     fields = ['name', 'price', 'available_on', 'multiplayer_count', 'crossplay_support', 'comment']
+    success_url = reverse_lazy('play_together:player-detail')
 
 
 class GameUpdate(UpdateView):

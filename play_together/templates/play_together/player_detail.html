@@ -126,6 +126,11 @@
       </form>
     </div>
   </div>
+  <div class="row">
+    <div class="col">
+      Could not find the game you're looking for? Add one <a href="{% url 'play_together:game-add' %}">here</a>.
+    </div>
+  </div>
 
   {% block script %}
     <script src="{% static 'play_together/toggle-button.js' %}"></script>
