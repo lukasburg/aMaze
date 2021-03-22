@@ -36,6 +36,7 @@ class GameCreate(CreateView):
 class GameUpdate(UpdateView):
     model = Game
     fields = ['name', 'price', 'available_on', 'multiplayer_count', 'crossplay_support', 'comment']
+    success_url = reverse_lazy('play_together:player-detail')
 
 
 @login_required
