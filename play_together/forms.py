@@ -1,5 +1,6 @@
 from django import forms
 from .models import Game
+from django.views.generic.edit import FormMixin, CreateView, UpdateView
 
 
 class PlayerToggleGameForm(forms.Form):
@@ -35,3 +36,37 @@ class GroupToggleGameForm(forms.Form):
             ).values_list('id', 'name')
             self.fields['toggle_game'].choices = remove_games
 
+
+class GameCreateUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Game
+        fields = '__all__'
+        widgets = {
+            'available_on': forms.CheckboxSelectMultiple
+        }
+
+    add_to_your_games = forms.BooleanField(initial=False, required=False)
+
+
+class BaseRedirectMixin(FormMixin):
+    def get_initial(self):
+        initial = self.initial.copy()
+        initial['success_redirect'] = self.request.GET.get('success_redirect')
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form()
+        form.fields['success_redirect'] = forms.CharField(max_length=100, widget=forms.HiddenInput, required=False)
+        return form
+
+    def form_valid(self, form):
+        self.success_url = form.cleaned_data['success_redirect']
+        return super().form_valid(form)
+
+
+class CreateWithRedirectView(BaseRedirectMixin, CreateView):
+    pass
+
+
+class UpdateWithRedirectView(BaseRedirectMixin, UpdateView):
+    pass

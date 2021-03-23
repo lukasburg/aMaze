@@ -133,7 +133,8 @@
   </div>
   <div class="row">
     <div class="col">
-      Could not find the game you're looking for? Add one <a href="{% url 'play_together:game-add' %}">here</a>.
+      Could not find the game you're looking for? Add one
+      <a href="{% url 'play_together:game-add' %}?success_redirect={% url 'play_together:player-detail' %}">here</a>.
     </div>
   </div>
 

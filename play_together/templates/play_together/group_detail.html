@@ -84,6 +84,12 @@
             {{ add_game_form|crispy }}
             <input type="submit" value="Add" class="btn btn-success">
           </form>
+          <div class="row">
+            <div class="col">
+              Could not find the game you're looking for? Add one
+              <a href="{% url 'play_together:game-add' %}?success_redirect={% url 'play_together:group-detail' group.pk %}">here</a>.
+            </div>
+          </div>
         </div>
       </div>
     </div>

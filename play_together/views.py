@@ -1,14 +1,14 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
 from django_http_exceptions import HTTPExceptions
 
 from .decorators import login_required_return_denied
-from .forms import PlayerToggleGameForm, GroupToggleGameForm
+from .forms import PlayerToggleGameForm, GroupToggleGameForm, GameCreateUpdateForm, CreateWithRedirectView, UpdateWithRedirectView
 from .models import Game, OwnedGame, Console, PlayerGroup
 
 
@@ -27,16 +27,30 @@ class GameDetail(DetailView):
     model = Game
 
 
-class GameCreate(CreateView):
+class GameCreate(LoginRequiredMixin, CreateWithRedirectView):
     model = Game
-    fields = ['name', 'price', 'available_on', 'multiplayer_count', 'crossplay_support', 'comment']
+    form_class = GameCreateUpdateForm
     success_url = reverse_lazy('play_together:player-detail')
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        player = self.request.user.player
+        if form.cleaned_data['add_to_your_games']:
+            player.games.add(form.instance)
+        return response
 
-class GameUpdate(UpdateView):
+
+class GameUpdate(LoginRequiredMixin, UpdateWithRedirectView):
     model = Game
-    fields = ['name', 'price', 'available_on', 'multiplayer_count', 'crossplay_support', 'comment']
+    form_class = GameCreateUpdateForm
     success_url = reverse_lazy('play_together:player-detail')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        player = self.request.user.player
+        if form.cleaned_data['add_to_your_games']:
+            player.games.add(form.instance)
+        return response
 
 
 @login_required
@@ -134,7 +148,6 @@ def group_detail(request, pk):
             ]
         } for game in group.watched_games.all()
     ]
-    print(game_list)
     context = {
         "group": group,
         "player_list": player_list,
