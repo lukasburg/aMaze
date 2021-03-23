@@ -129,26 +129,25 @@
       {% endfor %}
     </div>
   </div>
-  <div class="row mt-1">
+  <div class="row my-3">
     <div class="col">
       <form method="POST" action="{% url 'play_together:player-game-add' %}">
         {% csrf_token %}
         <div class="form-control-wrapper form-col-wrapper">
-          <div class="form-group row">
+          <div class="form-group row align-items-center">
             <div class="col-auto"><label for="toggle_game_id">Add a game to your list:</label></div>
             <div class="col-auto">{{ add_game_form.toggle_game }}</div>
             <div class="col-auto">
               <input type="submit" value="Add" class="btn btn-success">
             </div>
+            <div class="w-100 my-2 d-xl-none"></div>
+            <div class="col">
+              Could not find the game you're looking for?
+              <a class="btn btn-primary" href="{% url 'play_together:game-add' %}?success_redirect={% url 'play_together:player-detail' %}">Add one</a>
+            </div>
           </div>
         </div>
       </form>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      Could not find the game you're looking for? Add one
-      <a href="{% url 'play_together:game-add' %}?success_redirect={% url 'play_together:player-detail' %}">here</a>.
     </div>
   </div>
 

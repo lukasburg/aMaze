@@ -8,10 +8,20 @@
   <div class="row">
     <div class="col">
       <form method="post" action=".">
-        {% csrf_token %}
-        {{ form }}
-        <p>*This value must be entered</p>
-        <input type="submit" value="Submit" class="btn btn-success">
+        <div class="form-control-wrapper form-col-wrapper form-check">
+          {% csrf_token %}
+          <div class="form-group">{{ form.name.label_tag }}{{ form.name }}</div>
+          <div class="form-group">{{ form.price.label_tag }}{{ form.price }}</div>
+          <div class="form-group">{{ form.available_on.label_tag }}{{ form.available_on }}</div>
+          <div class="form-group">{{ form.multiplayer_count.label_tag }}{{ form.multiplayer_count }}</div>
+          <div class="form-group">{{ form.crossplay_support.label_tag }}{{ form.crossplay_support }}</div>
+          <div class="row align-items-center">
+            <div class="col-auto">{{ form.add_to_your_games.label_tag }}</div>
+            <div class="col-auto">{{ form.add_to_your_games }}</div>
+          </div>
+          {{ form.success_redirect }}
+          <input type="submit" value="Submit" class="btn btn-success">
+        </div>
       </form>
     </div>
   </div>

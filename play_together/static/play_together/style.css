@@ -44,7 +44,8 @@ body {
     vertical-align: middle;
 }
 
-.form-control-wrapper input:not(.btn), .form-control-wrapper select {
+/* Replicate Bootstrap 4 form rendering despite djangos form "mess" */
+.form-control-wrapper input:not(.btn), .form-control-wrapper select, .form-control-wrapper textarea{
     display: block;
     width: 100%;
     padding: .375rem .75rem;
@@ -64,4 +65,22 @@ body {
     margin-bottom: 0;
     font-size: inherit;
     line-height: 1.5;
+}
+
+.form-control-wrapper ul {
+    padding: 0;
+}
+
+.form-control-wrapper ul li {
+    list-style: none;
+}
+
+.form-control-wrapper ul li label {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.form-control-wrapper ul li label input {
+    width: auto !important;
+    margin-right: 5px;
 }
