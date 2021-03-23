@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # 'haystack',
-    'crispy_forms',
     "play_together",
 ]
 
@@ -133,5 +131,3 @@ if DEBUG:
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "play_together:player-detail"
 LOGOUT_REDIRECT_URL = "play_together:index"
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'

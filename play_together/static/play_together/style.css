@@ -32,7 +32,7 @@ body {
 }
 
 .btn-delete {
-    padding: .75rem 1.25rem !important;
+    /*padding: .75rem 1.25rem !important;*/
     color: #721c24;
 }
 
@@ -42,4 +42,26 @@ body {
 
 .table tr td {
     vertical-align: middle;
+}
+
+.form-control-wrapper input:not(.btn), .form-control-wrapper select {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.form-control-wrapper.form-col-wrapper label {
+    padding-top: calc(.375rem + 1px);
+    padding-bottom: calc(.375rem + 1px);
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: 1.5;
 }

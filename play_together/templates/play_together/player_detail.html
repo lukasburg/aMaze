@@ -1,7 +1,6 @@
 {% extends "play_together/base.html" %}
 
 {% load static %}
-{% load crispy_forms_filters %}
 
 {% block title %}Profile Page{% endblock %}
 
@@ -85,49 +84,64 @@
     </div>
   {% endif %}
   <div class="row mt-1">
-    {% for owned_game in player.ownedgame_set.all %}
-      <div class="col col-lg-8">
-        <div class="card">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <form action="{% url 'play_together:player-game-remove' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="toggle_game" value="{{ owned_game.game.id }}">
-                <button type="submit" class="close btn-delete" aria-label="Remove">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </form>
-              <strong class="col">{{ owned_game.game.name }}</strong>
-              {% for console in owned_game.game.available_on.all %}
-                <div class="col-auto align-self-end">
-                  <button data-class-true="btn-success" data-class-false="btn-outline-secondary"
-                          data-console-name="{{ console.name }}"
-                          data-server-url="{% url 'play_together:player-game-toggle-console' owned_game.game.id console.id %}"
-                          data-error-url="{% url 'play_together:toggle-error' %}?next={{ request.path }}"
-                          data-login-url="{% url 'login' %}?next={{ request.path }}"
-                     {% if console in owned_game.consoles.all %} data-current-state="true"
-                          class="btn btn-success btn-toggle"
-                     {% else %} data-current-state="false" class="btn btn-outline-secondary btn-toggle"
-                     {% endif %}
-                          onclick="pressToggleButton(this)"
-                     {% if not console in player.consoles.all %} disabled=""
-                     {% endif %}>
-                    <img src="{{ console.icon.url }}" alt="{{ console.name }}">
-                  </button>
+    <div class="col">
+      {% for owned_game in player.ownedgame_set.all %}
+        <div class="row">
+          <div class="col col-lg-8">
+            <div class="card">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <form action="{% url 'play_together:player-game-remove' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="toggle_game" value="{{ owned_game.game.id }}">
+                    <button type="submit" class="close btn-delete py-2 px-1 px-sm-2 px-md-3" aria-label="Remove">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </form>
+                  <strong class="col px-0 px-sm-1 px-md-2 px-lg-3">{{ owned_game.game.name }}</strong>
+                  <div class="col-auto">
+                    <div class="row">
+                      {% for console in owned_game.game.available_on.all %}
+                        <div class="col-auto px-0 px-sm-1 px-md-2 px-lg-3 align-self-end">
+                          <button data-class-true="btn-success" data-class-false="btn-outline-secondary"
+                                  data-console-name="{{ console.name }}"
+                                  data-server-url="{% url 'play_together:player-game-toggle-console' owned_game.game.id console.id %}"
+                                  data-error-url="{% url 'play_together:toggle-error' %}?next={{ request.path }}"
+                                  data-login-url="{% url 'login' %}?next={{ request.path }}"
+                             {% if console in owned_game.consoles.all %} data-current-state="true"
+                                  class="btn btn-success btn-toggle"
+                             {% else %} data-current-state="false" class="btn btn-outline-secondary btn-toggle"
+                             {% endif %}
+                                  onclick="pressToggleButton(this)"
+                             {% if not console in player.consoles.all %} disabled=""
+                             {% endif %}>
+                            <img src="{{ console.icon.url }}" alt="{{ console.name }}">
+                          </button>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
                 </div>
-              {% endfor %}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
   <div class="row mt-1">
     <div class="col">
       <form method="POST" action="{% url 'play_together:player-game-add' %}">
         {% csrf_token %}
-        {{ add_game_form|crispy }}
-        <input type="submit" value="Add" class="btn btn-success">
+        <div class="form-control-wrapper form-col-wrapper">
+          <div class="form-group row">
+            <div class="col-auto"><label for="toggle_game_id">Add a game to your list:</label></div>
+            <div class="col-auto">{{ add_game_form.toggle_game }}</div>
+            <div class="col-auto">
+              <input type="submit" value="Add" class="btn btn-success">
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>
