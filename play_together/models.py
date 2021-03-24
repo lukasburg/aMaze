@@ -72,6 +72,12 @@ class Player(models.Model):
     def __str__(self):
         return self.user.username
 
+    def get_consoles_for_game(self, game):
+        if self.ownedgame_set.filter(game_id=game).exists():
+            return [console for console in self.ownedgame_set.get(game_id=game).consoles.all()]
+        else:
+            return False
+
     def get_absolute_url(self):
         return reverse('play_together:player-detail')
 

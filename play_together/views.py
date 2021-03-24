@@ -7,8 +7,11 @@ from django.views.decorators.http import require_http_methods
 from django.views.generic.detail import DetailView
 from django_http_exceptions import HTTPExceptions
 
+from collections import Counter
+
 from .decorators import login_required_return_denied
-from .forms import PlayerToggleGameForm, GroupToggleGameForm, GameCreateUpdateForm, CreateWithRedirectView, UpdateWithRedirectView
+from .forms import PlayerToggleGameForm, GroupToggleGameForm, GameCreateUpdateForm, CreateWithRedirectView, \
+    UpdateWithRedirectView
 from .models import Game, OwnedGame, Console, PlayerGroup
 
 
@@ -130,28 +133,49 @@ def player_remove_game(request):
     return HttpResponseRedirect(reverse('play_together:player-detail'))
 
 
+def number_can_play_together(game, player_console_list):
+    if game.crossplay_support == 'full':
+        return None, len(player_console_list) - player_console_list.count(False)
+    grouped = Counter(console for player_list in player_console_list if player_list for console in player_list)
+    return grouped.most_common(1)[0]
+
+
+def number_could_play_together(game, player_list):
+    if game.crossplay_support == 'full':
+        score = 0
+        for player in player_list:
+            player.consoles.filter(id__in=game.available_on.all()).exists()
+            score = score + 1
+        return None, score
+    grouped = Counter()
+    for player in player_list:
+        grouped.update(player.consoles.filter(id__in=game.available_on.all()).all())
+    return grouped.most_common(1)[0]
+
+
 @login_required
 def group_detail(request, pk):
     group = get_object_or_404(PlayerGroup, id=pk)
     if not request.user.player.is_part_of_group(group):
         return redirect(f"/login?next={request.path}")
 
-    player_list = list(group.players.all())
-    game_list = [
+    player_list = group.players.order_by()
+
+    annotated_game_list = [
         {
             'game': game,
-            'player_list': [
-                [console for console in player.ownedgame_set.get(game_id=game).consoles.all()]
-                    if player.ownedgame_set.filter(game_id=game).exists()
-                    else False
-                for player in player_list
-            ]
+            'player_console_list': [player.get_consoles_for_game(game) for player in player_list]
         } for game in group.watched_games.all()
     ]
+    for annotated_game in annotated_game_list:
+        game = annotated_game['game']
+        annotated_game['can_play'] = number_can_play_together(game, annotated_game['player_console_list'])
+        annotated_game['could_play'] = number_could_play_together(game, player_list)
+    print(annotated_game_list)
     context = {
         "group": group,
         "player_list": player_list,
-        "game_list": game_list,
+        "game_list": annotated_game_list,
         "add_game_form": GroupToggleGameForm(group, is_add=True)
     }
     return render(request, "play_together/group_detail.html", context)
