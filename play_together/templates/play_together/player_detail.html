@@ -98,7 +98,11 @@
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </form>
-                  <strong class="col px-0 px-sm-1 px-md-2 px-lg-3">{{ owned_game.game.name }}</strong>
+                  <strong class="col px-0 px-sm-1 px-md-2 px-lg-3">
+                    <a href="{% url 'play_together:game-detail' owned_game.game.pk %}">
+                      {{ owned_game.game.name }}
+                    </a>
+                  </strong>
                   <div class="col-auto">
                     <div class="row">
                       {% for console in owned_game.game.available_on.all %}

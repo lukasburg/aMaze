@@ -1,0 +1,12 @@
+<div class="row align-items-center">
+  <div class="col">
+    {% if console_list %}
+      {% for console in console_list %}
+        <img height="16" src="{{ console.icon.url }}" alt="{{ console.name }}">
+        {% if forloop.last %}{% else %}<span class="mx-1"></span> {% endif %}
+      {% endfor %}
+    {% elif not console_list is False %} {# player own game but did not specify consoles #}
+      ?
+    {% endif %}
+  </div>
+</div>

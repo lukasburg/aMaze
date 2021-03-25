@@ -1,0 +1,56 @@
+<tr>
+  <td>
+    <div class="row">
+      <div class="col-auto">
+        <form action="{% url 'play_together:group-game-remove' group.pk %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="toggle_game" value="{{ annotated_game.game.id }}">
+          <button type="submit" class="close btn-delete btn-small" aria-label="Remove">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </form>
+      </div>
+      <div class="col-auto">
+        <a href="{% url 'play_together:game-detail' annotated_game.game.pk %}">
+          {{ annotated_game.game.name }}
+        </a>
+      </div>
+    </div>
+  </td>
+
+  <td>
+    {% if annotated_game.game.crossplay_support == 'full' %}
+      yes
+    {% elif annotated_game.game.crossplay_support == 'part' %}
+      ?
+    {% else %}
+      no
+    {% endif %}
+  </td>
+
+  {% for console_list in annotated_game.player_console_list %}
+    <td>
+      {% include 'play_together/group_components/player_console_list.html' %}
+    </td>
+  {% endfor %}
+
+  <td>
+    {{ annotated_game.can_play.1 }}
+    {% if annotated_game.can_play.0 %}
+      <img height="16" src="{{ annotated_game.can_play.0.icon.url }}"
+           alt="{{ annotated_game.can_play.0.name }}">
+    {% else %}
+      any
+    {% endif %}
+  </td>
+
+  <td>
+    {{ annotated_game.could_play.1 }}
+    {% if annotated_game.could_play.0 %}
+      <img height="16" src="{{ annotated_game.could_play.0.icon.url }}"
+           alt="{{ annotated_game.could_play.0.name }}">
+    {% else %}
+      any
+    {% endif %}
+  </td>
+</tr>

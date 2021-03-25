@@ -1,0 +1,28 @@
+<table class="table table-bordered border-top-0">
+  <thead class="text-left">
+  <tr>
+    <th scope="col">
+      Game
+    </th>
+    <th scope="col">
+      Crossplay support
+    </th>
+    {% for player in player_list %}
+      <th scope="col">
+        {{ player.user.username|title }}
+      </th>
+    {% endfor %}
+    <th scope="col">
+      Can play
+    </th>
+    <th scope="col">
+      Could play
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for annotated_game in game_list %}
+    {% include 'play_together/group_components/group_row.html' %}
+  {% endfor %}
+  </tbody>
+</table>

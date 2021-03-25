@@ -24,4 +24,7 @@
   <div class="row my-3">
     <div class="col-auto">Comment:</div><div class="col-auto">{{ game.comment|linebreaks }}</div>
   </div>
+  <a class="btn btn-secondary" href="{% url 'play_together:game-change' game.pk %}">
+    Change Info
+  </a>
 {% endblock %}

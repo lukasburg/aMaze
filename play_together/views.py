@@ -1,3 +1,5 @@
+from collections import Counter
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
@@ -6,8 +8,6 @@ from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.views.generic.detail import DetailView
 from django_http_exceptions import HTTPExceptions
-
-from collections import Counter
 
 from .decorators import login_required_return_denied
 from .forms import PlayerToggleGameForm, GroupToggleGameForm, GameCreateUpdateForm, CreateWithRedirectView, \
@@ -155,12 +155,12 @@ def number_could_play_together(game, player_list):
 
 @login_required
 def group_detail(request, pk):
+    order = request.GET.get('order', 'can_play')
     group = get_object_or_404(PlayerGroup, id=pk)
     if not request.user.player.is_part_of_group(group):
         return redirect(f"/login?next={request.path}")
 
     player_list = group.players.order_by()
-
     annotated_game_list = [
         {
             'game': game,
@@ -171,12 +171,20 @@ def group_detail(request, pk):
         game = annotated_game['game']
         annotated_game['can_play'] = number_can_play_together(game, annotated_game['player_console_list'])
         annotated_game['could_play'] = number_could_play_together(game, player_list)
-    print(annotated_game_list)
+
+    def crossplay_score(it):
+        return it['game'].crossplay_support == 'full'
+
+    ordered_list = sorted(annotated_game_list, key=crossplay_score, reverse=True)
+    print(ordered_list)
+    ordered_list = sorted(ordered_list, key=lambda an: an['could_play'][1], reverse=True)
+    ordered_list = sorted(ordered_list, key=lambda an: an['can_play'][1], reverse=True)
     context = {
         "group": group,
         "player_list": player_list,
-        "game_list": annotated_game_list,
+        "game_list": ordered_list,
         "add_game_form": GroupToggleGameForm(group, is_add=True)
+
     }
     return render(request, "play_together/group_detail.html", context)
 
