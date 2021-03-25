@@ -144,8 +144,8 @@ def number_could_play_together(game, player_list):
     if game.crossplay_support == 'full':
         score = 0
         for player in player_list:
-            player.consoles.filter(id__in=game.available_on.all()).exists()
-            score = score + 1
+            if player.consoles.filter(id__in=game.available_on.all()).exists():
+                score = score + 1
         return None, score
     grouped = Counter()
     for player in player_list:
