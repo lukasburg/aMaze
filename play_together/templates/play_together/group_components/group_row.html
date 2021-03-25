@@ -36,6 +36,7 @@
 
   <td>
     {{ annotated_game.can_play.1 }}
+    on
     {% if annotated_game.can_play.0 %}
       <img height="16" src="{{ annotated_game.can_play.0.icon.url }}"
            alt="{{ annotated_game.can_play.0.name }}">
@@ -46,6 +47,7 @@
 
   <td>
     {{ annotated_game.could_play.1 }}
+    on
     {% if annotated_game.could_play.0 %}
       <img height="16" src="{{ annotated_game.could_play.0.icon.url }}"
            alt="{{ annotated_game.could_play.0.name }}">
